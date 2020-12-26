@@ -66,10 +66,6 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                     comparisonCanvas.height = height;
 
                     let comparisonImage = new Image();
-                    if (comparisonImage === null || comparisonCanvas === null) {
-                        continue;
-                    }
-
                     let comparisonContext = comparisonCanvas.getContext('2d');
                     // @ts-ignore
                     comparisonImage.src = await toBase64(files[i]);
