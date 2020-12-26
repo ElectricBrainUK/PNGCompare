@@ -12,6 +12,27 @@ interface ContainerProps {
 }
 
 
+function createDisplay(comparisonCanvas: HTMLCanvasElement, strings: string[], attributefound: any = true) {
+    let cardElement = document.createElement("IonCard"); //todo doesnt work
+    let cardContent = document.createElement("IonCardContent");
+    cardElement.append(cardContent);
+    cardContent.append(comparisonCanvas);
+    let link = document.createElement("a");
+    let textElement = document.createElement("p");
+    if (attributefound === true) {
+        textElement.append("Attribution");
+        link.href = "https://github.com/ElectricBrainUK/PNGCompare/blob/master/downloads/" + strings.join('/').replace("./", "") + "?raw=true";
+        link.target = "_blank";
+    } else {
+        textElement.append("No attribution could be found");
+    }
+    link.appendChild(textElement);
+    cardContent.append(link);
+
+    // @ts-ignore
+    document.getElementById("container").appendChild(cardElement);
+}
+
 const onChangeHandler = async (event: any) => {
     // @ts-ignore
     let files = [], matches = [];
@@ -21,6 +42,8 @@ const onChangeHandler = async (event: any) => {
             files.push(file);
         }
     }
+
+    let loaded : any = {};
 
     for (let j = 0; j < spriteFiles.length; j++) {
         let image = sprites(spriteFiles[j]);
@@ -35,16 +58,24 @@ const onChangeHandler = async (event: any) => {
         storedImage.src = image;
 
         storedImage.onload = async function () {
+            const width = storedImage.width, height = storedImage.height;
+            stored.width = width;
+            stored.height = height;
+
             // @ts-ignore
             storedContext.drawImage(storedImage, 0, 0);
 
             // @ts-ignore
-            const width = storedContext.canvas.width, height = storedContext.canvas.height;
-            // @ts-ignore
             var storedImageData = storedContext.getImageData(0, 0, width, height);
 
             for (let i = 0; i < files.length; i++) {
+                if (!loaded[i]) {
+                    loaded[i] = 0;
+                }
                 let comparisonCanvas = document.createElement("canvas");
+                comparisonCanvas.width = width;
+                comparisonCanvas.height = height;
+
                 let comparisonImage = new Image();
                 if (comparisonImage === null || comparisonCanvas === null) {
                     continue;
@@ -55,6 +86,7 @@ const onChangeHandler = async (event: any) => {
                 comparisonImage.src = await toBase64(files[i]);
 
                 comparisonImage.onload = function () {
+                    loaded[i]++;
                     // @ts-ignore
                     comparisonContext.drawImage(comparisonImage, 0, 0);
 
@@ -63,6 +95,10 @@ const onChangeHandler = async (event: any) => {
 
 
                     let resultCanvas = document.createElement("canvas");
+
+                    resultCanvas.width = width;
+                    resultCanvas.height = height;
+
                     let diffContext = resultCanvas.getContext('2d');
 
                     if (diffContext === null) {
@@ -83,18 +119,11 @@ const onChangeHandler = async (event: any) => {
                         // @ts-ignore
                         console.log(matches);
 
-                        let divElement = document.createElement("div");
-                        divElement.append(comparisonCanvas);
-                        let link = document.createElement("a");
-                        let textElement = document.createElement("p");
-                        textElement.append("Attribution");
-                        link.appendChild(textElement);
-                        link.href = "https://github.com/ElectricBrainUK/PNGCompare/blob/master/downloads/" + strings.join('/').replace("./", "") + "?raw=true";
-                        link.target = "_blank";
-                        divElement.append(link);
+                        createDisplay(comparisonCanvas, strings);
+                    }
 
-                        // @ts-ignore
-                        document.getElementById("container").appendChild(divElement);
+                    if (loaded[i] === spriteFiles.length) {
+                        createDisplay(comparisonCanvas, [], false);
                     }
                 };
             }
