@@ -105,11 +105,17 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                             // @ts-ignore
                             resultTemp[files[i].name] = {
                                 file: spriteFiles[j],
-                                attribution: strings.join('/'),
+                                attribution: "No attribution could be found",
                                 src: comparisonImage.src,
                                 name: files[i].name
                             };
                             setResult({...resultTemp});
+
+                            fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings.join('/').replace("./", "")).then((res) => {
+                                let resultTemp: any = results;
+                                resultTemp[files[i].name].attribution = strings.join('/');
+                                setResult({...resultTemp});
+                            });
 
                             fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings2.join('/').replace("./", "")).then((openURL) => {
                                 openURL.json().then(json => {
@@ -144,7 +150,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     let cards = Object.keys(results).map(key => {
         // @ts-ignore
         let result = results[key];
-        return <IonCard key={result.name}>
+        return <IonCard key={result.name} style={{maxWidth: "500px"}}>
             <img src={result.src} alt={""}/>
             <IonCardHeader>
                 <IonCardTitle>{result.name}</IonCardTitle>
