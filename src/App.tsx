@@ -22,7 +22,7 @@ const App: React.FC = () => (
     <IonApp>
         <IonReactRouter>
             <IonRouterOutlet>
-                <Home></Home>ø
+                <Home></Home>
             </IonRouterOutlet>
         </IonReactRouter>
     </IonApp>
