@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "Attributor",
+  "appName": "pngcompare",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",
