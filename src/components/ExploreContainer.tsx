@@ -150,7 +150,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     let cards = Object.keys(results).map(key => {
         // @ts-ignore
         let result = results[key];
-        return <IonCard key={result.name} style={{maxWidth: "300px", display: "inline-block"}}>
+        return <IonCard key={result.name} style={{maxWidth: "300px", minWidth: "300px", display: "inline-block"}}>
             <img src={result.src} alt={""}/>
             <IonCardHeader>
                 <IonCardTitle>{result.name}</IonCardTitle>
