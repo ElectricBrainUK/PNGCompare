@@ -115,11 +115,13 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                             };
                             setResult({...resultTemp});
 
-                            import(strings2.join('/')).then((openURL) => {
-                                let resultTemp: any = results;
-                                // @ts-ignore
-                                resultTemp[files[i].name].url = openURL.url;
-                                setResult({...resultTemp});
+                            fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings2.join('/').replace("./", "")).then((openURL) => {
+                                openURL.json().then(json => {
+                                    let resultTemp: any = results;
+                                    // @ts-ignore
+                                    resultTemp[files[i].name].url = json.url;
+                                    setResult({...resultTemp});
+                                });
                             }).catch(err => {
                                 console.log(err);
                             });
@@ -165,7 +167,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                 <IonCol>
                     {
                         result.url ?
-                        <a href={result.url}>Link</a> : <></>
+                        <a target="_blank" href={result.url}>Link</a> : <></>
                     }
                 </IonCol>
             </IonCardContent>
