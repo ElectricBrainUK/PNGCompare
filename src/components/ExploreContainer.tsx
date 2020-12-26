@@ -150,7 +150,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     let cards = Object.keys(results).map(key => {
         // @ts-ignore
         let result = results[key];
-        return <IonCard key={result.name} style={{maxWidth: "500px"}}>
+        return <IonCard key={result.name} style={{maxWidth: "300px", display: "inline-block"}}>
             <img src={result.src} alt={""}/>
             <IonCardHeader>
                 <IonCardTitle>{result.name}</IonCardTitle>
@@ -160,7 +160,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                     {
                         result.attribution !== "No attribution could be found" ?
                             <a rel="noopener noreferrer" target="_blank" href={"https://github.com/ElectricBrainUK/PNGCompare/blob/master/downloads/" + result.attribution.replace("./", "") + "?raw=true"}>
-                                <p>Attribution</p>
+                                Attribution
                             </a>
                             :
                             <p>No attribution could be found</p>
