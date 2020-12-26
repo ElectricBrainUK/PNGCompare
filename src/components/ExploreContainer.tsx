@@ -83,13 +83,18 @@ const onChangeHandler = async (event: any) => {
                         // @ts-ignore
                         console.log(matches);
 
-                        fetch(strings.join('/')).then(res => {
-                            res.text().then(text => {
-                                // @ts-ignore
-                                document.getElementById("container").appendChild(comparisonCanvas);
-                                console.log(text);
-                            })
-                        })
+                        let divElement = document.createElement("div");
+                        divElement.append(comparisonCanvas);
+                        let link = document.createElement("a");
+                        let textElement = document.createElement("p");
+                        textElement.append("Attribution");
+                        link.appendChild(textElement);
+                        link.href = "https://github.com/ElectricBrainUK/PNGCompare/blob/master/downloads/" + strings.join('/').replace("./", "") + "?raw=true";
+                        link.target = "_blank";
+                        divElement.append(link);
+
+                        // @ts-ignore
+                        document.getElementById("container").appendChild(divElement);
                     }
                 };
             }
