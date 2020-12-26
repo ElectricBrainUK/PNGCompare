@@ -180,7 +180,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
 
     return (
         <div id="container" className="container">
-            <input type="file" name="file" onChange={onChangeHandler} multiple/>
+            <input accept="image/x-png" type="file" name="file" onChange={onChangeHandler} multiple/>
             {
                 cards
             }
