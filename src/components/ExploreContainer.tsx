@@ -149,7 +149,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
         // @ts-ignore
         let result = results[key];
         return <IonCard key={result.name}>
-            <img src={result.src}/>
+            <img src={result.src} alt={""}/>
             <IonCardHeader>
                 <IonCardTitle>{result.name}</IonCardTitle>
             </IonCardHeader>
@@ -157,7 +157,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                 <IonCol>
                     {
                         result.attribution !== "No attribution could be found" ?
-                            <a target="_blank" href={"https://github.com/ElectricBrainUK/PNGCompare/blob/master/downloads/" + result.attribution.replace("./", "") + "?raw=true"}>
+                            <a rel="noopener noreferrer" target="_blank" href={"https://github.com/ElectricBrainUK/PNGCompare/blob/master/downloads/" + result.attribution.replace("./", "") + "?raw=true"}>
                                 <p>Attribution</p>
                             </a>
                             :
@@ -167,7 +167,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                 <IonCol>
                     {
                         result.url ?
-                        <a target="_blank" href={result.url}>Link</a> : <></>
+                        <a rel="noopener noreferrer"  target="_blank" href={result.url}>Link</a> : <></>
                     }
                 </IonCol>
             </IonCardContent>
