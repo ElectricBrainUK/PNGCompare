@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="64" height="96" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="13">
+ <tileset firstgid="1" name="dark-wood" tilewidth="16" tileheight="16" tilecount="2048" columns="32">
+  <image source="dark-wood.png" width="512" height="1024"/>
+ </tileset>
+ <tileset firstgid="2049" source="alchemy.tsx"/>
+ <tileset firstgid="6145" source="alchemy-32.tsx"/>
+ <tileset firstgid="7169" name="guide" tilewidth="16" tileheight="16" tilecount="64" columns="8">
+  <image source="guide.png" trans="ff00ff" width="128" height="128"/>
+ </tileset>
+ <layer id="2" name="Table" width="64" height="96">
+  <data encoding="base64" compression="zlib">
+   eJzt2MtOwkAYxfFvooldUjasNdEX0414eQgNqIi+BIKKl3cw6kK8vINRF+LlGTyGTjqLriGd/n/JSco3pOlJyUyCGQAAAAAAAAAAAAAAAAAAAACgTG5qZrt1s/va5PNiarakLCsraf69BV0nafE9yuxVvXvq/5H1b+m6rfSVgbKn7Cunyll9ts86Df69+9+Bf+9zynyE7x8AAAAAgH8umWQnmfWTTN+6M2sqG8qWsu3ymZ9vBmuxOVCnjnKoHCnHLp/5eTdYi825Og2VC+VKuXb5zM8vg7XYPKjTSHlUnpUXl8/8/ClYi82nOo2VL+VH+XX5zM+/g7UYtFKzdvY/Z7j/NQsS4/7XV/dB1j/c/zoFiXH/W22YrTUm11Xs31P3k6x/uP8PCxLj/n+r7ncV7v+m7u9Z//D8GxWkSuffuCAxnn8AAAAAAAAAyu8PyCd02g==
+  </data>
+ </layer>
+ <layer id="5" name="Shadow" width="64" height="96">
+  <data encoding="base64" compression="zlib">
+   eJzt2rtOAkEUxvHxmkiCwoZtkMZrYkG0VSvtfARL7HwES7wlmhB5Ba+d8Rm8QGd8Bi/QGV/AwkOcyQ6DoTALC8v/l5zsmZ2E7LczOxVKAQAAAAAAAAAAAAAAhOvW/99cP5vIBddnyXjmB+Ok7hPOXDJG7yKdC66fkuvOD8Z53XvOXD5G+XtZMaPUvtSIrgOpw0x4v2/2vulf/L/nEs5ct5xL1gupOV2XUlch5k/nmvsvyVi29n/J2v/2XCnkdzGk13dUV6MflipI7Vh5N6TfDDG/K6rzf0av77yuRj+bac3rvo8wtDv/p6RP+a3nv7nfafeS9cH6/h+lnkLO3+78X5Z+xW89/839TnuVrG/W9/8u9dHB/Q8g/payzeM9Z3zijBEvq9n24zXWP9Z2nfXdYr0Hyrqz3tusPwAAAIA+UZiM+gmiVYx5ftY36idAFMY8pca93/4ordRxOtrn6bYFyb6o819L9hsrf3kA/oNTkbxVqUpKSt5D1dO9VXFWk+x1qZrkrEn2uqd7q06no37K7jB7wfgekNyG2QsAAAAAAAAAgN73Az0KTvk=
+  </data>
+ </layer>
+ <layer id="1" name="Glassware" width="64" height="96">
+  <data encoding="base64" compression="zlib">
+   eJztnLFPFEEYxfeAoAne7h0kFGBzQKCF+BccKLQQY6wPCLQa/wKEQKIWGksr1EALoVIr1EALobQ6NRCtNHRWvpHbMCzzjXMbllv23i+ZMO/d3LFvv9nLHjeD55G4lK43+ggulo28523mkxufdvaQZb+OPOH4XMbmAWlOVvN2vQa97nB9rAUYF7j7ipc36vOTYDtv1zvQuw75d5Bx15BT8hVbQk7JJxdPNW/Xh9BHDvU/RI2PDHWWfEWXUGfJT4Kcb9ft0Ncinon2AsYV3H3FLSGn5GeNu0JOyU+Ckm/Xg9BDhvpHfem+0Ha/+EjIKflJUPbtehx6wpA/6kv3kfXeXzYTWx31+UlQ8e16DnoerePmqaf3Q36hxr8NdZZ8xYGQU/KTYMG362XoFbQuLXOXIX8BY4qG60TyFcdCTsknF8+qb9dr0OsO838YY0YMdZZ8xSvhvkjyk2Dbt+sd6F2H+T+JMVOGnJKv+CDklPys8UXIKflJUPXt+hD6yFC/qL+B/mZk3APoh/7Zx3UvDeQCu26HvmaoR9TfQ6b9SK7n0C/8s4/rHmk8pcCuB6GHDPWP+sPojxjGSX5aKAd2PQ49YTj+qD+J/pRhnOSTdFAJ7HoOet6hfq7XSdpYCOx6GXrF4fhdrxNCSDpYKHreY7SPBXzuQct1el5LZ6OP6vJYRfbXaF+RvYpWQva+JspfRvbR4qnOod+Ctoi2pM2LVpyTtsh5uddz/vVM3pnf13vyc7S3zuOM+bz/UUHGaS1/Cf0+tDdob7V50Y/sAxmcF9uqxsWTGqtal5FxFK0f3oB2XlrRbyvKr3NVqaoaF09qrGpdQfbpzvN5o+cjLmMx52/c58XlE7J+1ubFGM7J7QzOf4lvyP5dmxczyD7bRPmT4E5tDo/XOZfjPo8QQi6T+z3mPiGEkPTxrvY+/V57v/5R6//kezghhBBCCCFNg2kf1oHmhXtlXNcIXTXCfVj6fozjmqfWaId7ZVzXCF0F9P2q4T4s036MrK7R1verhvuwTPsx1BrttK1lvmy4ljnbSGv/mwV9jf+T2vevT/k97D9muj1vtrvRR9E4FpF9Ce1ZhueDfi/wp5ZzXfubsLQ3OivY/neFQtobTQghhBBCCCGEEEIIIaQx/AW6BaoZ
+  </data>
+ </layer>
+ <layer id="3" name="Adapters" width="64" height="96">
+  <data encoding="base64" compression="zlib">
+   eJzt3M9u2jAcB/BfkKrlD1E1ED2UE0jVzlO1B4Addp5Qj50Ea7fz1CeA7roT111ge4M+Ab1tV95gr9AX2C/DkRxsnMAgofb3I0X+QlNkJ45rIqdEALvx6kS1etW1qNaTX3UNAPar6WfL/9Hh8aFbV7PJMCYaxWp2xZjbO4nVDOXYZ/+fRUTzSM0md6E+u+Ih1GdXLEN9Lsulny11PB6TarGalf2kOaKr80V5joj5Yr7LUJ/Lcudny9SQ6zIS9ZlxORf5j6GOCx7vHyM1mzwF+lyWqZ8tU2Nu50S0dcHlo8g1Q5uagT6bNEN9hmrt0v8TVffnbQ38bJnapf/vYhrosyuWgT4fkw6f826k5nWm8etYx7ZN/V/W4/b2IzXD81dk/t/jeXy/rmbls/j6HQRqBjhWRfp/UQ/8GUtfzQAAADZ5c54tt/29fe0HUJYrTZ/UvbfJSfsw+5bt9lyfAUzeFewrRferSku6Ni/a+vdt9DnnvOT9HMAGm65z26//vLnONnMhgOdG953Uxe+pL9r67JqXLaL3LTW74jW390tLzQAAAABgl4aF87zxhvVqnZiou/bMy4Dbf31K9OH08PUqk+cTTaW1qj1+3eO29y1/LnEYEY3EutbkObT0OHTEGi4vXB0Ll9ZoJ8dhJto/C1Y5WaN9rGuZDy3pA98tu97XJWPgIlj1dU9sE6kPJK8XFl8DyTmW1/h/PCO6OVP3sdW/cU5a43/Pbf/K21txj+8b/92bW7yuNe3jE6mN6+f/l7jf+9vi+7429/E88v+u+MHn/idvrxy9x33bIPrUqLoWAAAAAAAAAAAAAGDyF/BAWAo=
+  </data>
+ </layer>
+ <layer id="4" name="Stands" width="64" height="96">
+  <data encoding="base64" compression="zlib">
+   eJzt2bFtwkAUBuCjQIIBaOw6E0Q0ZABKiiCxSBpSwQ40ULFEKtiBAmUOVuC5wkLgCgnwfZ/0pNPdFf7vnt04JQAAAAAAAAAAAACufZTPfgIAAHiMcXEZD4vba9fzAADwyjq9lGaDlD4H9/dU6z9R86jfhn3vptO/jKt8i4Zs01hbR21alL9uFbm2DdmOLc1dqfr7+0a+ZfTHX4tz19273/+Y30XtMzkHUjpkftenyN/1X5OMTWr9X8T7UGb8TRhF9q+M8wMAAAAAvJozCukSrw==
+  </data>
+ </layer>
+ <layer id="6" name="Over" width="64" height="96">
+  <data encoding="base64" compression="zlib">
+   eJzt2T1vgzAQgGE7QwRRlnSoqool6RSlS0WXtr+s/77Oh1WU6SCHzoffR7KSwRw+fAYLQkB26EJ46+T9TyP6lu6Yclmn1qT2Lswr91+Cj5THc2ovqX0Kc8r9+4Vcg++Ux89CcsE07W3+Nwp10A5iSONNOUbT7nbOpwfOnce9G8SQxptyTGm8jvvMuv6tadT/fawx8TxeM03W619S/9I58jiXkvqXzpH1XGI86/t/HPRbOd3/3MfSiof5Wde/Nev6t17/tZtj/+NpHcyx/+E54Id2/cdtuo9tr/3y/5Kx/68b+5/rL/t/AJDTfHZ4pPnsgD+Reb/gvQ1Qn3z/q+EdbmysR2BrX3n+cWM9gvLUtP4B/GPN183jt15NfOsFAAAAAABL01f+/Qch/L5ajwCWvph/AAAAAAAAAECh/gC3NxdV
+  </data>
+ </layer>
+ <objectgroup id="7" name="Labels">
+  <object id="1" x="72.7266" y="598.078" width="13.5469" height="18.8438">
+   <text wrap="1">X</text>
+  </object>
+  <object id="2" x="26.2266" y="546.078" width="12.0469" height="18.8438">
+   <text wrap="1">Y</text>
+  </object>
+  <object id="3" x="221.227" y="581.078" width="11.5469" height="18.8438">
+   <text wrap="1">Z</text>
+  </object>
+  <object id="4" x="34.3288" y="837.349" width="177.979" height="53.7738">
+   <text pixelsize="8" wrap="1">Mix and match centrifuge animations.
+Separate animations for acceleration, spinning, and deceleration
+Animations for turning and emptying full, pellet-only, or empty tubes.</text>
+  </object>
+  <object id="5" x="31.479" y="662.47" width="181.29" height="75.4962">
+   <text fontfamily="Lucida Grande" pixelsize="8" wrap="1">Steam pipes segments are 32x32px, so they can run alongside glass pipes for liquids. 3 pipe directions: X (horizontal), Y (vertical), and Z (into screen). Use couplings and/or shadows to disambiguate Y from Z. Same for the glass pipes. There are 2 diameters of steam pipes; use couplings to connect them. </text>
+  </object>
+  <object id="6" x="479.814" y="825.062" width="172.376" height="18.8438">
+   <text pixelsize="8" wrap="1">Mix empty, slow, fast (separate animation), fill, empty</text>
+  </object>
+  <object id="7" x="297.683" y="16" width="106.393" height="51.1312">
+   <text pixelsize="8" wrap="1">Overlay adapters on a piece of glassware to connect it with tubing. Often multiple connections are possible.</text>
+  </object>
+  <object id="8" x="102.275" y="14.4428" width="126.748" height="63.7655">
+   <text pixelsize="8" wrap="1">Items are placed on a 16x16px grid. Glass pipes attach to the top, bottom, left, or right of each 16x16px tile. There are 8 possible attachment points for a given 32x32px object.</text>
+  </object>
+  <object id="9" x="244.968" y="674.958" width="8.19052" height="10.1492">
+   <text fontfamily="Lucida Grande" pixelsize="8" wrap="1">X</text>
+  </object>
+  <object id="10" x="243.7" y="691.733" width="8.19052" height="10.1492">
+   <text fontfamily="Lucida Grande" pixelsize="8" wrap="1">Y</text>
+  </object>
+  <object id="11" x="244.321" y="706.017" width="8.19052" height="10.1492">
+   <text fontfamily="Lucida Grande" pixelsize="8" wrap="1">Z</text>
+  </object>
+  <object id="12" x="103.239" y="966.05" width="48.6673" height="18.8438">
+   <text wrap="1">Demo</text>
+  </object>
+ </objectgroup>
+</map>

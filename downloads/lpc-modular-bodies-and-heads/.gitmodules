@@ -1,0 +1,3 @@
+[submodule "lpc-shell-tools"]
+	path = lpc-shell-tools
+	url = https://github.com/basxto/lpc-shell-tools.git

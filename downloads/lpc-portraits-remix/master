@@ -1,0 +1,6 @@
+0000000000000000000000000000000000000000 09cd1dade8fd81f01c916ddec94a1d34c2bb0862 Sebastian Riedel <git@basxto.de> 1604815105 +0100	commit (initial): Initial commit
+09cd1dade8fd81f01c916ddec94a1d34c2bb0862 09ea26b9091b60ca441bf817b0d9e8ad62dd492a Sebastian Riedel <git@basxto.de> 1604881419 +0100	commit: Allow randomized portraits
+09ea26b9091b60ca441bf817b0d9e8ad62dd492a d6e5f43e93538e320381b072e471b62e04830ea9 Sebastian Riedel <git@basxto.de> 1604883007 +0100	commit: Improve base skulls
+d6e5f43e93538e320381b072e471b62e04830ea9 b5a682b871c74aaf62e45fe66df6fbfb9abfe240 Sebastian Riedel <git@basxto.de> 1604889062 +0100	commit: Support specials & allow eyes to shin through hair
+b5a682b871c74aaf62e45fe66df6fbfb9abfe240 87e46d97c95d6021b324ea0764d6a8e26be2d0ca Sebastian Riedel <git@basxto.de> 1604890588 +0100	commit: Add ogre teeth and do some cleanup
+87e46d97c95d6021b324ea0764d6a8e26be2d0ca b4d2e03abcda0b103a509d97f61451ed8df8c62f Sebastian Riedel <git@basxto.de> 1604892178 +0100	commit: Include everything in zip file

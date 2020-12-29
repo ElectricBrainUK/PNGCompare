@@ -1,0 +1,15 @@
+Include everything in zip file
+# Bitte geben Sie eine Commit-Beschreibung für Ihre Änderungen ein. Zeilen,
+# die mit '#' beginnen, werden ignoriert, und eine leere Beschreibung
+# bricht den Commit ab.
+#
+# Auf Branch master
+# Zum Commit vorgemerkte Änderungen:
+#	geändert:       Makefile
+#
+# Unversionierte Dateien:
+#	bases/
+#	modular/
+#	palette/male_ivory_human_head.png
+#	release-0.zip
+#

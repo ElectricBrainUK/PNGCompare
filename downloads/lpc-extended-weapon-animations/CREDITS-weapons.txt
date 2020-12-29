@@ -1,0 +1,39 @@
+[LPC] Extended Weapon Animations by bluecarrot16, Johannes Sjölund (wulax), Daniel Eddeland (daneeklu), gr3yh47, and tskaufma. Commisioned by castelonia. 
+
+Based on: 
+
+[LPC] Medieval fantasy character sprites
+Johannes Sjölund (wulax)
+CC-BY-SA 3.0 / GPL 3.0
+https://opengameart.org/content/lpc-medieval-fantasy-character-sprites
+
+[LPC] Glow Sword
+tskaufma, Johannes Sjölund (wulax)
+CC-BY-SA 3.0 / GPL 3.0
+https://opengameart.org/content/lpc-glow-sword
+
+LPC Weapons: two bows, a spear and a trident
+Daniel Eddeland (daneeklu), wulax, gr3yh47
+CC-BY-SA 3.0
+https://opengameart.org/content/lpc-weapons-two-bows-a-spear-and-a-trident
+
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  
+
+If you use this entire submission, the license is CC-BY-SA 3.0. 
+
+If you use only individual files from this submission, the licenses are as follows:
+
+|            File           |                     Authors                      |        License         |  DRM   |
+|---------------------------|--------------------------------------------------|------------------------|--------|
+| scythe-slash-oversize.png | bluecarrot16                                     | CC0                    | N/A    |
+| scythe.png                | bluecarrot16                                     | CC0                    | N/A    |
+| glowsword_blue.png        | tskaufma, Johannes Sjölund (wulax), bluecarrot16 | CC-BY-SA 3.0 / GPL 3.0 |        |
+| glowsword_red.png         | tskaufma, Johannes Sjölund (wulax), bluecarrot16 | CC-BY-SA 3.0 / GPL 3.0 |        |
+| longsword.png             | Johannes Sjölund (wulax), bluecarrot16           | CC-BY-SA 3.0 / GPL 3.0 | waived |
+| mace-slash-oversize.png   | Johannes Sjölund (wulax), bluecarrot16           | CC-BY-SA 3.0 / GPL 3.0 | waived |
+| mace.png                  | Johannes Sjölund (wulax), bluecarrot16           | CC-BY-SA 3.0 / GPL 3.0 | waived |
+| rapier.png                | Johannes Sjölund (wulax), bluecarrot16           | CC-BY-SA 3.0 / GPL 3.0 | waived |
+| saber.png                 | Daniel Eddeland (daneeklu), wulax, gr3yh47       | CC-BY-SA 3.0           |        |
+| dagger.png                | Johannes Sjölund (wulax), bluecarrot16           | CC-BY-SA 3.0 / GPL 3.0 | waived |
+
+DRM waived = "I waive the DRM-limitation clause in the Creative Commons license for this art collection, allowing their free use on platforms like iOS or Steam provided you give credit as specified."

@@ -71,6 +71,10 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                     comparisonImage.src = await toBase64(files[i]);
 
                     comparisonImage.onload = function () {
+                        if (found[i]) {
+                            return;
+                        }
+
                         loaded[i]++;
                         // @ts-ignore
                         comparisonContext.drawImage(comparisonImage, 0, 0);
