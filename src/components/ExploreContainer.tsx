@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './ExploreContainer.css';
-import {IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol} from "@ionic/react";
+import {IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonProgressBar} from "@ionic/react";
 
 const pixelmatch = require('pixelmatch');
 
@@ -8,6 +8,50 @@ const pixelmatch = require('pixelmatch');
 const sprites = require.context("../../downloads", true, /\.(png|jpe?g|svg)$/);
 // @ts-ignore
 const spriteFiles = require.context("../../downloads", true, /\.(png|jpe?g|svg)$/).keys();
+
+let setLoadingFiles: any;
+let setUnloadingFiles: any;
+
+let files: any = [];
+
+let loadFiles = () => {
+        let loading = 0;
+        let loaded = 0;
+        for (let j = 0; j < spriteFiles.length; j++) {
+            let image = sprites(spriteFiles[j]);
+
+            let stored = document.createElement("canvas");
+            let storedImage = new Image();
+            if (stored === null || storedImage === null) {
+                continue;
+            }
+
+            let storedContext: any = stored.getContext('2d');
+            storedImage.src = image;
+
+            loading++;
+            setUnloadingFiles(loading);
+
+            files[j] = {
+                image: spriteFiles[j]
+            };
+
+            storedImage.onload = () => {
+                stored.width = storedImage.width;
+                stored.height = storedImage.height;
+
+                storedContext.drawImage(storedImage, 0, 0);
+
+                files[j].data = storedContext.getImageData(0, 0, storedImage.width, storedImage.height).data;
+                files[j].width = storedImage.width;
+                files[j].height = storedImage.height;
+
+                loaded++;
+                setLoadingFiles(loaded + 1);
+            }
+        }
+    }
+;
 
 interface ContainerProps {
 }
@@ -19,150 +63,155 @@ const toBase64 = (file: File) => new Promise((resolve, reject) => {
     reader.onerror = error => reject(error);
 });
 
+let loading = false;
+
 const ExploreContainer: React.FC<ContainerProps> = () => {
     const [results, setResult] = useState({});
+    const [loadedFiles, setLoaded] = useState(0);
+    const [unloadedFiles, setUnloaded] = useState(0);
+
+    useEffect(() => {
+        if (!loading) {
+            loading = true;
+            setLoadingFiles = setLoaded;
+            setUnloadingFiles = setUnloaded;
+            setTimeout(loadFiles, 3000);
+        }
+    });
 
     const onChangeHandler = async (event: any) => {
-        let files: any = [];
+        let uploadedFiles: any = [];
         for (let i = 0; i < event.target.files.length; i++) {
             let file = event.target.files[i];
             if (file.name.includes(".png")) {
-                files.push(file);
+                uploadedFiles.push(file);
             }
         }
 
         let loaded: any = {};
         let found: any = [];
 
-        for (let j = 0; j < spriteFiles.length; j++) {
-            let image = sprites(spriteFiles[j]);
-
-            let stored = document.createElement("canvas");
-            let storedImage = new Image();
-            if (stored === null || storedImage === null) {
+        for (let j = 0; j < files.length; j++) {
+            let checking = files[j];
+            if (checking === null) {
                 continue;
             }
 
-            let storedContext = stored.getContext('2d');
-            storedImage.src = image;
+            for (let i = 0; i < uploadedFiles.length; i++) {
+                if (!loaded[i]) {
+                    loaded[i] = 0;
+                }
+                let comparisonCanvas = document.createElement("canvas");
 
-            storedImage.onload = async function () {
-                stored.width = storedImage.width;
-                stored.height = storedImage.height;
-
+                let comparisonImage = new Image();
                 // @ts-ignore
-                storedContext.drawImage(storedImage, 0, 0);
+                comparisonImage.src = await toBase64(uploadedFiles[i]);
 
-                // @ts-ignore
-                var storedImageData = storedContext.getImageData(0, 0, storedImage.width, storedImage.height);
+                let comparisonContext = comparisonCanvas.getContext('2d');
 
-                for (let i = 0; i < files.length; i++) {
-                    if (!loaded[i]) {
-                        loaded[i] = 0;
+                comparisonImage.onload = function () {
+                    if (found[i]) {
+                        return;
                     }
-                    let comparisonCanvas = document.createElement("canvas");
 
-                    let comparisonImage = new Image();
-                    // @ts-ignore
-                    comparisonImage.src = await toBase64(files[i]);
-
-                    if (comparisonImage.width !== storedImage.width || comparisonImage.height !== storedImage.width) {
-                        continue;
+                    if (comparisonImage.width !== checking.width || comparisonImage.height !== checking.width) {
+                        return;
                     }
 
                     comparisonCanvas.width = comparisonImage.width;
                     comparisonCanvas.height = comparisonImage.height;
-                    let comparisonContext = comparisonCanvas.getContext('2d');
 
-                    comparisonImage.onload = function () {
-                        if (found[i]) {
-                            return;
+                    loaded[i]++;
+                    // @ts-ignore
+                    comparisonContext.drawImage(comparisonImage, 0, 0);
+
+                    // @ts-ignore
+                    let comparisonImageData = comparisonContext.getImageData(0, 0, comparisonImage.width, comparisonImage.height);
+
+                    let resultCanvas = document.createElement("canvas");
+
+                    resultCanvas.width = checking.width;
+                    resultCanvas.height = checking.height;
+
+                    let diffContext = resultCanvas.getContext('2d');
+
+                    if (diffContext === null) {
+                        return;
+                    }
+
+                    const diff = diffContext.createImageData(resultCanvas.width, resultCanvas.height);
+                    let numDiffPixels = 11;
+                    try {
+                        numDiffPixels = pixelmatch(comparisonImageData.data, checking.data, diff.data, resultCanvas.width, resultCanvas.height, {threshold: 0.1});
+                    } catch (e) {
+                        return;
+                    }
+                    diffContext.putImageData(diff, 0, 0);
+
+                    if (found[i]) {
+                        return;
+                    }
+
+                    if (numDiffPixels < 10) {
+                        found[i] = true;
+                        let strings = spriteFiles[j].split('/');
+                        strings[strings.length - 1] = "Attribution.txt";
+                        let strings2 = spriteFiles[j].split('/');
+                        strings2[strings2.length - 1] = "opengameart.json";
+
+                        let resultTemp: any = results;
+                        // @ts-ignore
+                        resultTemp[uploadedFiles[i].name] = {
+                            file: spriteFiles[j],
+                            attribution: "No attribution could be found",
+                            src: comparisonImage.src,
+                            name: uploadedFiles[i].name
+                        };
+                        setResult({...resultTemp});
+
+                        try {
+                            fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings.join('/').replace("./", "")).then((res) => {
+                                let resultTemp: any = results;
+                                resultTemp[uploadedFiles[i].name].attribution = strings.join('/');
+                                setResult({...resultTemp});
+                            }).catch(err => {
+                                console.log(err);
+                            });
+                        } catch (e) {
+                            console.log(e);
                         }
 
-                        loaded[i]++;
-                        // @ts-ignore
-                        comparisonContext.drawImage(comparisonImage, 0, 0);
-
-                        // @ts-ignore
-                        let comparisonImageData = comparisonContext.getImageData(0, 0, storedImage.width, storedImage.height);
-
-
-                        let resultCanvas = document.createElement("canvas");
-
-                        resultCanvas.width = stored.width;
-                        resultCanvas.height = stored.height;
-
-                        let diffContext = resultCanvas.getContext('2d');
-
-                        if (diffContext === null) {
-                            return;
-                        }
-
-                        const diff = diffContext.createImageData(resultCanvas.width, resultCanvas.height);
-                        const numDiffPixels = pixelmatch(comparisonImageData.data, storedImageData.data, diff.data, resultCanvas.width, resultCanvas.height, {threshold: 0.1});
-                        diffContext.putImageData(diff, 0, 0);
-
-                        if (numDiffPixels < 10) {
-                            found[i] = true;
-                            let strings = spriteFiles[j].split('/');
-                            strings[strings.length - 1] = "Attribution.txt";
-                            let strings2 = spriteFiles[j].split('/');
-                            strings2[strings2.length - 1] = "opengameart.json";
-
-                            let resultTemp: any = results;
-                            // @ts-ignore
-                            resultTemp[files[i].name] = {
-                                file: spriteFiles[j],
-                                attribution: "No attribution could be found",
-                                src: comparisonImage.src,
-                                name: files[i].name
-                            };
-                            setResult({...resultTemp});
-
-                            try {
-                                fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings.join('/').replace("./", "")).then((res) => {
+                        try {
+                            fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings2.join('/').replace("./", "")).then((openURL) => {
+                                openURL.json().then(json => {
                                     let resultTemp: any = results;
-                                    resultTemp[files[i].name].attribution = strings.join('/');
+                                    resultTemp[uploadedFiles[i].name].url = json.url;
+                                    resultTemp[uploadedFiles[i].name].username = json.username;
+                                    resultTemp[uploadedFiles[i].name].ogName = json.name;
                                     setResult({...resultTemp});
-                                }).catch(err => {
-                                    console.log(err);
                                 });
-                            } catch (e) {
-                                console.log(e);
-                            }
-
-                            try {
-                                fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings2.join('/').replace("./", "")).then((openURL) => {
-                                    openURL.json().then(json => {
-                                        let resultTemp: any = results;
-                                        resultTemp[files[i].name].url = json.url;
-                                        resultTemp[files[i].name].username = json.username;
-                                        resultTemp[files[i].name].ogName = json.name;
-                                        setResult({...resultTemp});
-                                    });
-                                }).catch(err => {
-                                    console.log(err);
-                                });
-                            } catch (e) {
-                                console.log(e);
-                            }
+                            }).catch(err => {
+                                console.log(err);
+                            });
+                        } catch (e) {
+                            console.log(e);
                         }
+                    }
 
-                        // @ts-ignore
-                        if (loaded[i] === spriteFiles.length && !results[files[i]] && !found[i]) {
-                            let resultTemp: any = results;
-                            resultTemp[files[i].name] = {
-                                file: spriteFiles[j],
-                                attribution: "No attribution could be found",
-                                src: comparisonImage.src,
-                                name: files[i].name
-                            };
+                    // @ts-ignore
+                    if (loaded[i] === spriteFiles.length && !results[uploadedFiles[i]] && !found[i]) {
+                        let resultTemp: any = results;
+                        resultTemp[uploadedFiles[i].name] = {
+                            file: spriteFiles[j],
+                            attribution: "No attribution could be found",
+                            src: comparisonImage.src,
+                            name: uploadedFiles[i].name
+                        };
 
-                            setResult({...resultTemp});
-                        }
-                    };
-                }
-            };
+                        setResult({...resultTemp});
+                    }
+                };
+            }
         }
     };
 
@@ -199,10 +248,15 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     });
 
     console.log(results);
+    console.log(files);
+    console.log(loadedFiles);
+    console.log(unloadedFiles);
 
     return (
         <div id="container">
-            <input accept="image/x-png" type="file" name="file" onChange={onChangeHandler} multiple/>
+            <IonProgressBar value={loadedFiles / unloadedFiles}></IonProgressBar>
+            <input accept="image/x-png" type="file" name="file" onChange={onChangeHandler} multiple
+                   disabled={loadedFiles !== unloadedFiles || unloadedFiles === 0}/>
             {
                 cards
             }
