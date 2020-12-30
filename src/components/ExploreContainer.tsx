@@ -47,28 +47,32 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
             storedImage.src = image;
 
             storedImage.onload = async function () {
-                const width = storedImage.width, height = storedImage.height;
-                stored.width = width;
-                stored.height = height;
+                stored.width = storedImage.width;
+                stored.height = storedImage.height;
 
                 // @ts-ignore
                 storedContext.drawImage(storedImage, 0, 0);
 
                 // @ts-ignore
-                var storedImageData = storedContext.getImageData(0, 0, width, height);
+                var storedImageData = storedContext.getImageData(0, 0, storedImage.width, storedImage.height);
 
                 for (let i = 0; i < files.length; i++) {
                     if (!loaded[i]) {
                         loaded[i] = 0;
                     }
                     let comparisonCanvas = document.createElement("canvas");
-                    comparisonCanvas.width = width;
-                    comparisonCanvas.height = height;
 
                     let comparisonImage = new Image();
-                    let comparisonContext = comparisonCanvas.getContext('2d');
                     // @ts-ignore
                     comparisonImage.src = await toBase64(files[i]);
+
+                    if (comparisonImage.width !== storedImage.width || comparisonImage.height !== storedImage.width) {
+                        continue;
+                    }
+
+                    comparisonCanvas.width = comparisonImage.width;
+                    comparisonCanvas.height = comparisonImage.height;
+                    let comparisonContext = comparisonCanvas.getContext('2d');
 
                     comparisonImage.onload = function () {
                         if (found[i]) {
@@ -80,13 +84,13 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                         comparisonContext.drawImage(comparisonImage, 0, 0);
 
                         // @ts-ignore
-                        let comparisonImageData = comparisonContext.getImageData(0, 0, width, height);
+                        let comparisonImageData = comparisonContext.getImageData(0, 0, storedImage.width, storedImage.height);
 
 
                         let resultCanvas = document.createElement("canvas");
 
-                        resultCanvas.width = width;
-                        resultCanvas.height = height;
+                        resultCanvas.width = stored.width;
+                        resultCanvas.height = stored.height;
 
                         let diffContext = resultCanvas.getContext('2d');
 
@@ -94,8 +98,8 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                             return;
                         }
 
-                        const diff = diffContext.createImageData(width, height);
-                        const numDiffPixels = pixelmatch(comparisonImageData.data, storedImageData.data, diff.data, width, height, {threshold: 0.1});
+                        const diff = diffContext.createImageData(resultCanvas.width, resultCanvas.height);
+                        const numDiffPixels = pixelmatch(comparisonImageData.data, storedImageData.data, diff.data, resultCanvas.width, resultCanvas.height, {threshold: 0.1});
                         diffContext.putImageData(diff, 0, 0);
 
                         if (numDiffPixels < 10) {
@@ -115,22 +119,33 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                             };
                             setResult({...resultTemp});
 
-                            fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings.join('/').replace("./", "")).then((res) => {
-                                let resultTemp: any = results;
-                                resultTemp[files[i].name].attribution = strings.join('/');
-                                setResult({...resultTemp});
-                            });
-
-                            fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings2.join('/').replace("./", "")).then((openURL) => {
-                                openURL.json().then(json => {
+                            try {
+                                fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings.join('/').replace("./", "")).then((res) => {
                                     let resultTemp: any = results;
-                                    // @ts-ignore
-                                    resultTemp[files[i].name].url = json.url;
+                                    resultTemp[files[i].name].attribution = strings.join('/');
                                     setResult({...resultTemp});
+                                }).catch(err => {
+                                    console.log(err);
                                 });
-                            }).catch(err => {
-                                console.log(err);
-                            });
+                            } catch (e) {
+                                console.log(e);
+                            }
+
+                            try {
+                                fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings2.join('/').replace("./", "")).then((openURL) => {
+                                    openURL.json().then(json => {
+                                        let resultTemp: any = results;
+                                        resultTemp[files[i].name].url = json.url;
+                                        resultTemp[files[i].name].username = json.username;
+                                        resultTemp[files[i].name].ogName = json.name;
+                                        setResult({...resultTemp});
+                                    });
+                                }).catch(err => {
+                                    console.log(err);
+                                });
+                            } catch (e) {
+                                console.log(e);
+                            }
                         }
 
                         // @ts-ignore
@@ -158,12 +173,15 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
             <img src={result.src} alt={""}/>
             <IonCardHeader>
                 <IonCardTitle>{result.name}</IonCardTitle>
+                <IonCardTitle>{result.username}</IonCardTitle>
+                <IonCardTitle>{result.ogName}</IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
                 <IonCol>
                     {
-                        result.attribution !== "No attribution could be found" ?
-                            <a rel="noopener noreferrer" target="_blank" href={"https://github.com/ElectricBrainUK/PNGCompare/blob/master/downloads/" + result.attribution.replace("./", "") + "?raw=true"}>
+                        result.attribution && result.attribution !== "No attribution could be found" ?
+                            <a rel="noopener noreferrer" target="_blank"
+                               href={"https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + result.attribution.replace("./", "")}>
                                 Attribution
                             </a>
                             :
@@ -173,7 +191,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                 <IonCol>
                     {
                         result.url ?
-                        <a rel="noopener noreferrer"  target="_blank" href={result.url}>Link</a> : <></>
+                            <a rel="noopener noreferrer" target="_blank" href={result.url}>Link</a> : <></>
                     }
                 </IonCol>
             </IonCardContent>
