@@ -110,6 +110,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                 let comparisonContext = comparisonCanvas.getContext('2d');
 
                 comparisonImage.onload = function () {
+                    loaded[i]++;
                     if (found[i]) {
                         return;
                     }
@@ -121,7 +122,6 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                     comparisonCanvas.width = comparisonImage.width;
                     comparisonCanvas.height = comparisonImage.height;
 
-                    loaded[i]++;
                     // @ts-ignore
                     comparisonContext.drawImage(comparisonImage, 0, 0);
 
