@@ -247,11 +247,6 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
         </IonCard>
     });
 
-    console.log(results);
-    console.log(files);
-    console.log(loadedFiles);
-    console.log(unloadedFiles);
-
     return (
         <div id="container">
             <IonProgressBar value={loadedFiles / unloadedFiles}></IonProgressBar>
