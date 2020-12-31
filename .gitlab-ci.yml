@@ -2,6 +2,8 @@ variables:
   PUBLIC_URL: "/$CI_PROJECT_NAME"
 
 pages:
+  stage:
+    build
   tags:
   - machine
   script:
@@ -15,6 +17,8 @@ pages:
     - public
 
 gh-pages:
+  stage:
+    deploy
   tags:
   - machine
   script:
