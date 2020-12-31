@@ -20,7 +20,7 @@ pages:
 
 gh-pages:
   stage:
-    test
+    build
   tags:
   - machine
   script:
