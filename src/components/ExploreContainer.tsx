@@ -36,6 +36,7 @@ let loadFiles = () => {
                 image: spriteFiles[j]
             };
 
+            // eslint-disable-next-line no-loop-func
             storedImage.onload = () => {
                 stored.width = storedImage.width;
                 stored.height = storedImage.height;
@@ -77,7 +78,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
             setUnloadingFiles = setUnloaded;
             setTimeout(loadFiles, 3000);
         }
-    });
+    }, []);
 
     const onChangeHandler = async (event: any) => {
         event.persist();
@@ -94,6 +95,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
 
                 let comparisonContext: any = comparisonCanvas.getContext('2d');
 
+                // eslint-disable-next-line no-loop-func
                 comparisonImage.onload = () => {
                     comparisonCanvas.width = comparisonImage.width;
                     comparisonCanvas.height = comparisonImage.height;
