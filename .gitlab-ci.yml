@@ -14,6 +14,14 @@ pages:
     paths:
     - public
 
+gh-pages:
+  tags:
+  - machine
+  script:
+  - npm i
+  - npm run build
+  - npm run deploy-gh
+
 stages:
 - build
 - test
