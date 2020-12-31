@@ -120,7 +120,6 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     };
 
     const findMatches = (uploadedFiles: any[]) => {
-        let loaded: any = {};
         let found: any = [];
 
         for (let j = 0; j < files.length; j++) {
@@ -131,11 +130,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
 
             for (let i = 0; i < uploadedFiles.length; i++) {
                 let comparisonImage = uploadedFiles[i];
-                if (!loaded[i]) {
-                    loaded[i] = 0;
-                }
 
-                loaded[i]++;
                 if (found[i]) {
                     continue;
                 }
@@ -213,19 +208,20 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
                         console.log(e);
                     }
                 }
+            }
+        }
 
-                // @ts-ignore
-                if (loaded[i] === spriteFiles.length && !results[uploadedFiles[i]] && !found[i]) {
-                    let resultTemp: any = results;
-                    resultTemp[uploadedFiles[i].name] = {
-                        file: spriteFiles[j],
-                        attribution: "No attribution could be found",
-                        src: comparisonImage.src,
-                        name: uploadedFiles[i].name
-                    };
+        for (let i = 0; i < uploadedFiles.length; i++) {
+            // @ts-ignore
+            if (!results[uploadedFiles[i]] && !found[i]) {
+                let resultTemp: any = results;
+                resultTemp[uploadedFiles[i].name] = {
+                    attribution: "No attribution could be found",
+                    src: uploadedFiles[i].src,
+                    name: uploadedFiles[i].name
+                };
 
-                    setResult({...resultTemp});
-                }
+                setResult({...resultTemp});
             }
         }
     };
