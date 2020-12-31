@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './ExploreContainer.css';
 import {IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonProgressBar} from "@ionic/react";
+import {threadId} from "worker_threads";
 
 const pixelmatch = require('pixelmatch');
 
@@ -11,6 +12,8 @@ const spriteFiles = require.context("../../downloads", true, /\.(png|jpe?g|svg)$
 
 let setLoadingFiles: any;
 let setUnloadingFiles: any;
+
+let threshold = 5;
 
 let files: any = [];
 
@@ -262,7 +265,7 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
         <div id="container">
             <IonProgressBar value={loadedFiles / unloadedFiles}></IonProgressBar>
             <input accept="image/x-png" type="file" name="file" onChange={onChangeHandler} multiple
-                   disabled={loadedFiles !== unloadedFiles || unloadedFiles === 0}/>
+                   disabled={Math.abs(loadedFiles - unloadedFiles) > threshold || unloadedFiles === 0}/>
             {
                 cards
             }
