@@ -80,14 +80,44 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
     });
 
     const onChangeHandler = async (event: any) => {
+        event.persist();
         let uploadedFiles: any = [];
+        let uploadsToLoad = 0;
         for (let i = 0; i < event.target.files.length; i++) {
             let file = event.target.files[i];
             if (file.name.includes(".png")) {
-                uploadedFiles.push(file);
+                uploadsToLoad++;
+                let comparisonCanvas = document.createElement("canvas");
+
+                let comparisonImage: any = new Image();
+                comparisonImage.src = await toBase64(file);
+
+                let comparisonContext: any = comparisonCanvas.getContext('2d');
+
+                comparisonImage.onload = () => {
+                    comparisonCanvas.width = comparisonImage.width;
+                    comparisonCanvas.height = comparisonImage.height;
+
+                    comparisonContext.drawImage(comparisonImage, 0, 0);
+
+                    let comparisonImageData = comparisonContext.getImageData(0, 0, comparisonImage.width, comparisonImage.height);
+
+                    uploadedFiles.push({
+                        width: comparisonImage.width,
+                        height: comparisonImage.height,
+                        src: comparisonImage.src,
+                        data: comparisonImageData.data,
+                        name: file.name
+                    });
+                    if (uploadsToLoad <= uploadedFiles.length) {
+                        findMatches(uploadedFiles);
+                    }
+                };
             }
         }
+    };
 
+    const findMatches = (uploadedFiles: any[]) => {
         let loaded: any = {};
         let found: any = [];
 
@@ -98,119 +128,102 @@ const ExploreContainer: React.FC<ContainerProps> = () => {
             }
 
             for (let i = 0; i < uploadedFiles.length; i++) {
+                let comparisonImage = uploadedFiles[i];
                 if (!loaded[i]) {
                     loaded[i] = 0;
                 }
-                let comparisonCanvas = document.createElement("canvas");
 
-                let comparisonImage = new Image();
-                // @ts-ignore
-                comparisonImage.src = await toBase64(uploadedFiles[i]);
+                loaded[i]++;
+                if (found[i]) {
+                    continue;
+                }
 
-                let comparisonContext = comparisonCanvas.getContext('2d');
+                if (comparisonImage.width !== checking.width || comparisonImage.height !== checking.width) {
+                    continue;
+                }
 
-                comparisonImage.onload = function () {
-                    loaded[i]++;
-                    if (found[i]) {
-                        return;
-                    }
+                let resultCanvas = document.createElement("canvas");
 
-                    if (comparisonImage.width !== checking.width || comparisonImage.height !== checking.width) {
-                        return;
-                    }
+                resultCanvas.width = checking.width;
+                resultCanvas.height = checking.height;
 
-                    comparisonCanvas.width = comparisonImage.width;
-                    comparisonCanvas.height = comparisonImage.height;
+                let diffContext = resultCanvas.getContext('2d');
 
+                if (diffContext === null) {
+                    continue;
+                }
+
+                const diff = diffContext.createImageData(resultCanvas.width, resultCanvas.height);
+                let numDiffPixels = 11;
+                try {
+                    numDiffPixels = pixelmatch(comparisonImage.data, checking.data, diff.data, resultCanvas.width, resultCanvas.height, {threshold: 0.1});
+                } catch (e) {
+                    continue;
+                }
+                diffContext.putImageData(diff, 0, 0);
+
+                if (found[i]) {
+                    continue;
+                }
+
+                if (numDiffPixels < 10) {
+                    found[i] = true;
+                    let strings = spriteFiles[j].split('/');
+                    strings[strings.length - 1] = "Attribution.txt";
+                    let strings2 = spriteFiles[j].split('/');
+                    strings2[strings2.length - 1] = "opengameart.json";
+
+                    let resultTemp: any = results;
                     // @ts-ignore
-                    comparisonContext.drawImage(comparisonImage, 0, 0);
+                    resultTemp[uploadedFiles[i].name] = {
+                        file: spriteFiles[j],
+                        attribution: "No attribution could be found",
+                        src: comparisonImage.src,
+                        name: uploadedFiles[i].name
+                    };
+                    setResult({...resultTemp});
 
-                    // @ts-ignore
-                    let comparisonImageData = comparisonContext.getImageData(0, 0, comparisonImage.width, comparisonImage.height);
-
-                    let resultCanvas = document.createElement("canvas");
-
-                    resultCanvas.width = checking.width;
-                    resultCanvas.height = checking.height;
-
-                    let diffContext = resultCanvas.getContext('2d');
-
-                    if (diffContext === null) {
-                        return;
-                    }
-
-                    const diff = diffContext.createImageData(resultCanvas.width, resultCanvas.height);
-                    let numDiffPixels = 11;
                     try {
-                        numDiffPixels = pixelmatch(comparisonImageData.data, checking.data, diff.data, resultCanvas.width, resultCanvas.height, {threshold: 0.1});
+                        fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings.join('/').replace("./", "")).then((res) => {
+                            let resultTemp: any = results;
+                            resultTemp[uploadedFiles[i].name].attribution = strings.join('/');
+                            setResult({...resultTemp});
+                        }).catch(err => {
+                            console.log(err);
+                        });
                     } catch (e) {
-                        return;
-                    }
-                    diffContext.putImageData(diff, 0, 0);
-
-                    if (found[i]) {
-                        return;
+                        console.log(e);
                     }
 
-                    if (numDiffPixels < 10) {
-                        found[i] = true;
-                        let strings = spriteFiles[j].split('/');
-                        strings[strings.length - 1] = "Attribution.txt";
-                        let strings2 = spriteFiles[j].split('/');
-                        strings2[strings2.length - 1] = "opengameart.json";
-
-                        let resultTemp: any = results;
-                        // @ts-ignore
-                        resultTemp[uploadedFiles[i].name] = {
-                            file: spriteFiles[j],
-                            attribution: "No attribution could be found",
-                            src: comparisonImage.src,
-                            name: uploadedFiles[i].name
-                        };
-                        setResult({...resultTemp});
-
-                        try {
-                            fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings.join('/').replace("./", "")).then((res) => {
+                    try {
+                        fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings2.join('/').replace("./", "")).then((openURL) => {
+                            openURL.json().then(json => {
                                 let resultTemp: any = results;
-                                resultTemp[uploadedFiles[i].name].attribution = strings.join('/');
+                                resultTemp[uploadedFiles[i].name].url = json.url;
+                                resultTemp[uploadedFiles[i].name].username = json.username;
+                                resultTemp[uploadedFiles[i].name].ogName = json.name;
                                 setResult({...resultTemp});
-                            }).catch(err => {
-                                console.log(err);
                             });
-                        } catch (e) {
-                            console.log(e);
-                        }
-
-                        try {
-                            fetch("https://raw.githubusercontent.com/ElectricBrainUK/PNGCompare/master/downloads/" + strings2.join('/').replace("./", "")).then((openURL) => {
-                                openURL.json().then(json => {
-                                    let resultTemp: any = results;
-                                    resultTemp[uploadedFiles[i].name].url = json.url;
-                                    resultTemp[uploadedFiles[i].name].username = json.username;
-                                    resultTemp[uploadedFiles[i].name].ogName = json.name;
-                                    setResult({...resultTemp});
-                                });
-                            }).catch(err => {
-                                console.log(err);
-                            });
-                        } catch (e) {
-                            console.log(e);
-                        }
+                        }).catch(err => {
+                            console.log(err);
+                        });
+                    } catch (e) {
+                        console.log(e);
                     }
+                }
 
-                    // @ts-ignore
-                    if (loaded[i] === spriteFiles.length && !results[uploadedFiles[i]] && !found[i]) {
-                        let resultTemp: any = results;
-                        resultTemp[uploadedFiles[i].name] = {
-                            file: spriteFiles[j],
-                            attribution: "No attribution could be found",
-                            src: comparisonImage.src,
-                            name: uploadedFiles[i].name
-                        };
+                // @ts-ignore
+                if (loaded[i] === spriteFiles.length && !results[uploadedFiles[i]] && !found[i]) {
+                    let resultTemp: any = results;
+                    resultTemp[uploadedFiles[i].name] = {
+                        file: spriteFiles[j],
+                        attribution: "No attribution could be found",
+                        src: comparisonImage.src,
+                        name: uploadedFiles[i].name
+                    };
 
-                        setResult({...resultTemp});
-                    }
-                };
+                    setResult({...resultTemp});
+                }
             }
         }
     };
