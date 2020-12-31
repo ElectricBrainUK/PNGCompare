@@ -1,5 +1,7 @@
 variables:
   PUBLIC_URL: "/$CI_PROJECT_NAME"
+  NAME: "willnnotdan"
+  EMAIL: "info@electricbrain.co.uk"
 
 pages:
   stage:
@@ -24,7 +26,11 @@ gh-pages:
   script:
   - npm i
   - npm run build
+  - git config user.email $EMAIL
+  - git config user.name $NAME
   - npm run deploy-gh
+  only:
+  - master
 
 stages:
 - build
